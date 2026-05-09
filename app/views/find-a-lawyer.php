@@ -13,7 +13,7 @@ require VIEW_PATH . '/layouts/header.php';
 <nav class="breadcrumb-bar" aria-label="Breadcrumb">
   <div class="container">
     <ol>
-      <li><a href="/">Home</a></li>
+      <li><a href="/">hi</a></li>
       <li aria-current="page">Find a Lawyer</li>
     </ol>
   </div>
