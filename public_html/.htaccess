@@ -1,0 +1,103 @@
+# =============================================================================
+# LawMillion.com — Apache .htaccess
+# Clean URLs, 301 redirects from legacy .html, security headers, compression
+# Place this file in /public (the document root)
+# =============================================================================
+
+Options -MultiViews -Indexes
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # ---- Force HTTPS ----
+    RewriteCond %{HTTPS} !=on
+    RewriteCond %{HTTP:X-Forwarded-Proto} !https
+    RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+
+    # ---- Force non-www ----
+    RewriteCond %{HTTP_HOST} ^www\.lawmillion\.us$ [NC]
+    RewriteRule ^ https://lawmillion.us%{REQUEST_URI} [R=301,L]
+
+    # ---- 301: Legacy "lawmillion-*.html" -> clean URLs ----
+    RewriteRule ^lawmillion-personal-injury\.html$        /practice-areas/personal-injury/             [R=301,L]
+    RewriteRule ^lawmillion-employment-law\.html$         /practice-areas/employment-law/              [R=301,L]
+    RewriteRule ^lawmillion-family-law\.html$             /practice-areas/family-law/                  [R=301,L]
+    RewriteRule ^lawmillion-bankruptcy\.html$             /practice-areas/bankruptcy/                  [R=301,L]
+    RewriteRule ^lawmillion-business-law\.html$           /practice-areas/business-law/                [R=301,L]
+    RewriteRule ^lawmillion-civil-rights\.html$           /practice-areas/civil-rights/                [R=301,L]
+    RewriteRule ^lawmillion-dui-traffic\.html$            /practice-areas/dui-traffic/                 [R=301,L]
+    RewriteRule ^lawmillion-environmental-law\.html$      /practice-areas/environmental-law/           [R=301,L]
+    RewriteRule ^lawmillion-estate-planning\.html$        /practice-areas/estate-planning/             [R=301,L]
+    RewriteRule ^lawmillion-immigration\.html$            /practice-areas/immigration/                 [R=301,L]
+    RewriteRule ^lawmillion-intellectual-property\.html$  /practice-areas/intellectual-property/       [R=301,L]
+    RewriteRule ^lawmillion-medical-malpractice\.html$    /practice-areas/medical-malpractice/         [R=301,L]
+    RewriteRule ^lawmillion-real-estate\.html$            /practice-areas/real-estate/                 [R=301,L]
+    RewriteRule ^lawmillion-social-security\.html$        /practice-areas/social-security-disability/  [R=301,L]
+    RewriteRule ^lawmillion-tax-law\.html$                /practice-areas/tax-law/                     [R=301,L]
+    RewriteRule ^lawmillion-find-lawyers\.html$           /find-a-lawyer/                              [R=301,L]
+    RewriteRule ^lawmillion-attorney-profile\.html$       /attorneys/tx/dallas/amanda-j-richardson/    [R=301,L]
+    RewriteRule ^lawmillion-attorney-profile-making\.html$ /for-attorneys/create-profile/              [R=301,L]
+    RewriteRule ^lawmillion-attorney-login\.html$         /for-attorneys/login/                        [R=301,L]
+    RewriteRule ^lawmillion-lawyer-dashboard\.html$       /for-attorneys/dashboard/                    [R=301,L]
+    RewriteRule ^lawmillion-blog-list\.html$              /blog/                                       [R=301,L]
+    RewriteRule ^lawmillion-blog-detail\.html$            /blog/tcja-sunset-2026-tax-cuts-jobs-act-guide/ [R=301,L]
+
+    # ---- 301: Old short URLs (without /practice-areas/ prefix) ----
+    RewriteRule ^employment-law/?$        /practice-areas/employment-law/         [R=301,L]
+    RewriteRule ^personal-injury/?$       /practice-areas/personal-injury/        [R=301,L]
+    RewriteRule ^family-law/?$            /practice-areas/family-law/             [R=301,L]
+    RewriteRule ^bankruptcy/?$            /practice-areas/bankruptcy/             [R=301,L]
+    RewriteRule ^business-law/?$          /practice-areas/business-law/           [R=301,L]
+    RewriteRule ^civil-rights/?$          /practice-areas/civil-rights/           [R=301,L]
+    RewriteRule ^dui-traffic/?$           /practice-areas/dui-traffic/            [R=301,L]
+    RewriteRule ^environmental-law/?$     /practice-areas/environmental-law/      [R=301,L]
+    RewriteRule ^estate-planning/?$       /practice-areas/estate-planning/        [R=301,L]
+    RewriteRule ^immigration/?$           /practice-areas/immigration/            [R=301,L]
+    RewriteRule ^intellectual-property/?$ /practice-areas/intellectual-property/  [R=301,L]
+    RewriteRule ^medical-malpractice/?$   /practice-areas/medical-malpractice/    [R=301,L]
+    RewriteRule ^real-estate/?$           /practice-areas/real-estate/            [R=301,L]
+    RewriteRule ^social-security/?$       /practice-areas/social-security-disability/ [R=301,L]
+    RewriteRule ^tax-law/?$               /practice-areas/tax-law/                [R=301,L]
+
+    # ---- Send everything else to index.php (front controller) ----
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(.*)$ index.php [L,QSA]
+</IfModule>
+
+# ---- Compression ----
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript
+    AddOutputFilterByType DEFLATE application/javascript application/xml application/json
+    AddOutputFilterByType DEFLATE application/xhtml+xml application/rss+xml image/svg+xml
+</IfModule>
+
+# ---- Browser caching ----
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType image/jpg                  "access plus 1 year"
+    ExpiresByType image/jpeg                 "access plus 1 year"
+    ExpiresByType image/png                  "access plus 1 year"
+    ExpiresByType image/webp                 "access plus 1 year"
+    ExpiresByType image/svg+xml              "access plus 1 year"
+    ExpiresByType text/css                   "access plus 1 month"
+    ExpiresByType application/javascript     "access plus 1 month"
+    ExpiresByType application/x-font-woff2   "access plus 1 year"
+    ExpiresByType image/x-icon               "access plus 1 year"
+    ExpiresByType text/html                  "access plus 0 seconds"
+</IfModule>
+
+# ---- Security: block direct access to dotfiles, env, composer, etc. ----
+<FilesMatch "^\.|composer\.(json|lock)|package(-lock)?\.json|\.env$|\.git">
+    Require all denied
+</FilesMatch>
+
+# ---- Disable server signature ----
+ServerSignature Off
+
+# ---- Custom error pages ----
+ErrorDocument 404 /index.php
+ErrorDocument 500 /index.php
+
+# ---- MIME types ----
+AddType application/manifest+json .webmanifest
+AddType image/webp                .webp

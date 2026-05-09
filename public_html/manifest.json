@@ -1,0 +1,17 @@
+{
+  "name": "LawMillion — Find a Lawyer",
+  "short_name": "LawMillion",
+  "description": "Connect with verified U.S. attorneys nationwide. Free consultations in 50 states.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#080F1E",
+  "orientation": "portrait-primary",
+  "lang": "en-US",
+  "dir": "ltr",
+  "icons": [
+    { "src": "/assets/images/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "/assets/images/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}
